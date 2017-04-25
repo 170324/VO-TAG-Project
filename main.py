@@ -1,6 +1,7 @@
 import msvcrt
 
 class Player:
+	""" defines the base stats of the player """
 	
 	health = 100
 	
