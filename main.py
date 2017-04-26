@@ -40,6 +40,8 @@ def get_names():
 		i += 1
 	return names
 
+# may turn below into one fuction to start game
+
 print("Hello, welcome to A Journey To Mars. [Press enter to continue]")
 msvcrt.getch()
 print("Give me the names of you and the other two members of your crew:")
