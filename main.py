@@ -4,6 +4,11 @@ class Player:
 	""" Player: defines the base stats of the player """
 
 	health = 100
+	sick = False
+	morale = "standard"		# three types of morale, [low, standard, and high]
+							# it matters when a problem occurs, if a player has
+							# low morale than it is harder to fix something,
+							# the opposite as if he had high morale
 
 	def __init__(self, name):
 		self.name = name
@@ -11,8 +16,19 @@ class Player:
 class Item:
 	""" Will be a template for making items such as medicine or food """
 
-	def __init__(self):
-		pass	# will require information about what item it is
+	def __init__(self, name, pounds, heal=0):
+		self.name = name
+		self.pounds = pounds
+		self.heal = heal
+
+class Problem:
+	""" Will consist of all of the diseases, spaceship problems, and 'space madness' values """
+	
+	def __init__(self, name, chance, death_timer, recovery):
+		self.name = name					# name of problem
+		self.chance = chance				# chance to get it
+		self.death_timer = death_timer		# turns it takes to die with it
+		self.recovery = recovery			# chance to get rid of it
 
 class Inventory:
 	""" Inventory: will maintain the current state of the player's items """
@@ -40,7 +56,7 @@ def get_names():
 		i += 1
 	return names
 
-# may turn below into one fuction to start game
+day = 0			# number day it is, 26 turns in total
 
 print("Hello, welcome to A Journey To Mars. [Press enter to continue]")
 msvcrt.getch()
