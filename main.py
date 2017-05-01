@@ -40,7 +40,7 @@ class Inventory:
 		message = "\t".join(["Name", "Pounds", "Quantity"])
 		for item in self.items.values():
 			message += "\n" + "\t".join([str(x) for x in [item.name, item.pounds, self.counter[item.name]]])
-		return message
+		return message		# need to fix the alignment of output
 
 	def add_item(self, item):
 		""" add_item: adds an item class member to inventory's dictionary """
@@ -85,8 +85,11 @@ print("Hello, welcome to A Journey To Mars. [Press any key to continue]")
 msvcrt.getch()
 print("Give me the names of you and the other two members of your crew:")
 names = get_names()
-print("The next step in the journey is that you must gather supplies.")
+print("For the preparation of this journey, you must gather supplies.")
 msvcrt.getch()
+print("You can carry a maximum of 1000 pounds on the journey at all time.")
+msvcrt.getch()
+# next is to figure out how to get the amount they want and store it in the inventory
 
 # global and class definitions
 day = 0			# number day it is, 26 turns in total
