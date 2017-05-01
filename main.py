@@ -23,7 +23,7 @@ class Item:
 
 class Problem:
 	""" Problem: will consist of all of the diseases, spaceship problems, and 'space madness' values """
-	
+
 	def __init__(self, name, altname, death_timer, recovery):
 		self.name = name							# name of problem
 		self.death_timer = death_timer						# turns it takes to die with it
@@ -33,13 +33,34 @@ class Inventory:
 	""" Inventory: will maintain the current state of the player's items """
 
 	def __init__(self):
-		self.items = {}
+		self.items = {}		# this contains actual item stats
+		self.counter = {}	# this contains the amount they have in inventory
 
 	def __str__(self):
-		pass	# will print your inventory to the player
+		message = "\t".join(["Name", "Pounds", "Quantity"])
+		for item in self.items.values():
+			message += "\n" + "\t".join([str(x) for x in [item.name, item.pounds, self.counter[item.name]]])
+		return message
 
-	def add_item():
-		pass	# will add an item to the player's invetory
+	def add_item(self, item):
+		""" add_item: adds an item class member to inventory's dictionary """
+
+		self.items[item.name] = item
+
+		if item.name in self.counter.keys():
+			self.counter[item.name] += 1
+		else:
+			self.counter[item.name] = 1
+
+	def remove_item(self, item):
+		""" remove_item: removes item from both items and counter dictionaries """
+
+		if item.name in self.counter.keys():
+			self.counter[item.name] -= 1
+
+		if self.counter[item.name] == 0:
+			del self.counter[item.name]
+			del self.items[item.name]
 
 def get_names():
 	""" get_names: gets names of players and returns a list """
@@ -57,20 +78,18 @@ def get_names():
 
 def percentage(part, whole):
 	""" percentage: turn a regular number into a percentage """
-	
+
 	return 100 * float(part)/float(whole)
 
-day = 0			# number day it is, 26 turns in total
-
-print("Hello, welcome to A Journey To Mars. [Press enter to continue]")
+print("Hello, welcome to A Journey To Mars. [Press any key to continue]")
 msvcrt.getch()
 print("Give me the names of you and the other two members of your crew:")
 names = get_names()
 print("The next step in the journey is that you must gather supplies.")
 msvcrt.getch()
 
-# definitions after inventory, will probably move into seperate file
-
+# global and class definitions
+day = 0			# number day it is, 26 turns in total
 Player1 = Player(names[0])
 Player2 = Player(names[1])
 Player3 = Player(names[2])
@@ -82,3 +101,4 @@ B_arm = Problem("Broken Arm", "a broken arm", 0, 50)
 Food = Item("Food", 40)
 Meds = Item("Medicine", 50, True)
 S_parts = Item("Spare Parts", 400)
+Inventory = Inventory()
