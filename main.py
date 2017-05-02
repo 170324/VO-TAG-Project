@@ -19,14 +19,15 @@ class Item:
 	def __init__(self, name, pounds, heal=False):
 		self.name = name
 		self.pounds = pounds
-		self.heal = heal # will be True if it can get rid of sickness
+		self.heal = heal 			# will be True if it can get rid of sickness
 
 class Problem:
 	""" Problem: will consist of all of the diseases, spaceship problems, and 'space madness' values """
 
-	def __init__(self, name, altname, death_timer, recovery):
+	def __init__(self, name, altname, dpt, recovery):
 		self.name = name							# name of problem
-		self.death_timer = death_timer						# turns it takes to die with it
+		self.altname = altname							# used in a string
+		self.dpt = dpt								# damage per turn
 		self.recovery = percentage(recovery, 100)				# chance to get rid of it
 
 class Inventory:
@@ -76,6 +77,11 @@ def get_names():
 		i += 1
 	return names
 
+def get_items():
+	""" get_items: gets the initial items the player wants and stores them in inventory """
+	
+	pass
+	
 def percentage(part, whole):
 	""" percentage: turn a regular number into a percentage """
 
@@ -96,11 +102,11 @@ day = 0			# number day it is, 26 turns in total
 Player1 = Player(names[0])
 Player2 = Player(names[1])
 Player3 = Player(names[2])
-Flu = Problem("Flu", "the flu", 4, 30)
-S_virus = Problem("Stomach Virus", "a stomach virus", 2, 80)
-Smallpox = Problem("Smallpox", "smallpox", 6, 6)
-Sprain = Problem("Sprain", "a sprain", 15, 90)
-B_arm = Problem("Broken Arm", "a broken arm", 0, 50)
+Flu = Problem("Flu", "the flu", 20, 40)
+S_virus = Problem("Stomach Virus", "a stomach virus", 45, 80)
+Smallpox = Problem("Smallpox", "smallpox", 15, 20)
+Sprain = Problem("Sprain", "a sprain", 1, 85)
+B_arm = Problem("Broken Arm", "a broken arm", 7, 50)
 Food = Item("Food", 40)
 Meds = Item("Medicine", 50, True)
 S_parts = Item("Spare Parts", 400)
