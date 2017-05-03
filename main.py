@@ -81,7 +81,7 @@ def get_items():
 	""" get_items: gets the initial items the player wants and stores them in inventory """
 	
 	pass
-	
+			
 def percentage(part, whole):
 	""" percentage: turn a regular number into a percentage """
 
@@ -93,8 +93,8 @@ print("Give me the names of you and the other two members of your crew:")
 names = get_names()
 print("For the preparation of this journey, you must gather supplies.")
 msvcrt.getch()
-print("You can carry a maximum of 1000 pounds on the journey at all time.")
-msvcrt.getch()
+get_items()
+
 # next is to figure out how to get the amount they want and store it in the inventory
 
 # global and class definitions
@@ -107,7 +107,7 @@ S_virus = Problem("Stomach Virus", "a stomach virus", 45, 80)
 Smallpox = Problem("Smallpox", "smallpox", 15, 20)
 Sprain = Problem("Sprain", "a sprain", 1, 85)
 B_arm = Problem("Broken Arm", "a broken arm", 7, 50)
-Food = Item("Food", 40)
-Meds = Item("Medicine", 50, True)
-S_parts = Item("Spare Parts", 400)
+Food = Item("Food", 1.5)
+Meds = Item("Medicine", 100, True)
+S_parts = Item("Spare Parts", 200)
 Inventory = Inventory()
