@@ -9,7 +9,7 @@ class Player:
 							# it matters when a problem occurs, if a player has
 							# low morale than it is harder to fix something,
 							# the opposite as if he had high morale
-
+							
 	def __init__(self, name):
 		self.name = name
 
@@ -79,8 +79,34 @@ def get_names():
 
 def get_items():
 	""" get_items: gets the initial items the player wants and stores them in inventory """
+
+	max = 5000
+	amount = 0
+	objects = ["spare parts", "medical products", "food"]
+	current = 0
 	
-	pass
+	print("The supplies you may bring are food, medical products, and spare parts.")
+	msvcrt.getch()
+	print("Your spaceship has a maximum cargo of 5000 pounds. If you exceed the limit, the rocket will not launch due to safety precuations.")
+	msvcrt.getch()
+	print("Spare parts weigh 200 lb per unit. You can use these to repair the spaceship if it breaks.")
+	msvcrt.getch()
+	print("Medical products weigh 100 lb per unit. These will help you heal diseases.")
+	msvcrt.getch()
+	print("Food weighs 1.5 lb per pack. This will make sure you do not starve on the journey.")
+	msvcrt.getch()
+
+	while (current < 3):
+		if (amount <= 5000):
+			print("Please enter the number of {} that you would like to bring.".format(objects[current]))
+			item = input()
+			try:
+				val = int(item)
+			except:
+				print("You need to enter a valid number.")
+				continue
+			if (val):
+				print(val)
 			
 def percentage(part, whole):
 	""" percentage: turn a regular number into a percentage """
@@ -93,7 +119,6 @@ print("Give me the names of you and the other two members of your crew:")
 names = get_names()
 print("For the preparation of this journey, you must gather supplies.")
 msvcrt.getch()
-get_items()
 
 # next is to figure out how to get the amount they want and store it in the inventory
 
