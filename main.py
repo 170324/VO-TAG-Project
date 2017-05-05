@@ -106,13 +106,39 @@ def get_items():
 			except:
 				print("You need to enter a valid amount.\n")
 				continue
-			if (val):
-				print(val)
+			if (current == 0 and ((val * 200) <= max)):				# spare parts
+				new_amount = val * 200
+				Inventory.add_item(S_parts)
+				Inventory.counter["Spare Parts"] += (val - 1)
+			elif (current == 1 and ((val * 100) <= max)):			# medical products
+				new_amount = val * 100
+				Inventory.add_item(Meds)
+				Inventory.counter["Medical Products"] += (val - 1)
+			elif (current == 2 and ((val * 1.5) <= max)):			# food
+				new_amount = val * 1.5
+				Inventory.add_item(Food)
+				Inventory.counter["Food"] += (val - 1)
+			else:
+				pass
+			amount += new_amount
+			current += 1
 
 def percentage(part, whole):
 	""" percentage: turn a regular number into a percentage """
 
 	return 100 * float(part)/float(whole)
+
+# global and class definitions
+day = 0			# number day it is, 26 turns in total
+Flu = Problem("Flu", "the flu", 20, 40)
+S_virus = Problem("Stomach Virus", "a stomach virus", 45, 80)
+Smallpox = Problem("Smallpox", "smallpox", 15, 20)
+Sprain = Problem("Sprain", "a sprain", 1, 85)
+B_arm = Problem("Broken Arm", "a broken arm", 7, 50)
+Food = Item("Food", 1.5)
+Meds = Item("Medical Products", 100, True)
+S_parts = Item("Spare Parts", 200)
+Inventory = Inventory()
 
 print("Hello, welcome to A Journey To Mars. [Press any key to continue]")
 msvcrt.getch()
@@ -120,20 +146,8 @@ print("Give me the names of you and the other two members of your crew:")
 names = get_names()
 print("For the preparation of this journey, you must gather supplies.")
 msvcrt.getch()
-
 # next is to figure out how to get the amount they want and store it in the inventory
 
-# global and class definitions
-day = 0			# number day it is, 26 turns in total
 Player1 = Player(names[0])
 Player2 = Player(names[1])
 Player3 = Player(names[2])
-Flu = Problem("Flu", "the flu", 20, 40)
-S_virus = Problem("Stomach Virus", "a stomach virus", 45, 80)
-Smallpox = Problem("Smallpox", "smallpox", 15, 20)
-Sprain = Problem("Sprain", "a sprain", 1, 85)
-B_arm = Problem("Broken Arm", "a broken arm", 7, 50)
-Food = Item("Food", 1.5)
-Meds = Item("Medicine", 100, True)
-S_parts = Item("Spare Parts", 200)
-Inventory = Inventory()
