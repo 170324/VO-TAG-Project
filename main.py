@@ -1,4 +1,5 @@
 import msvcrt
+import math
 
 class Player:
 	""" Player: defines the base stats of the player """
@@ -9,7 +10,7 @@ class Player:
 							# it matters when a problem occurs, if a player has
 							# low morale than it is harder to fix something,
 							# the opposite as if he had high morale
-							
+
 	def __init__(self, name):
 		self.name = name
 
@@ -84,7 +85,7 @@ def get_items():
 	amount = 0
 	objects = ["spare parts", "medical products", "food"]
 	current = 0
-	
+
 	print("The supplies you may bring are food, medical products, and spare parts.")
 	msvcrt.getch()
 	print("Your spaceship has a maximum cargo of 5000 pounds. If you exceed the limit, the rocket will not launch due to safety precuations.")
@@ -103,11 +104,11 @@ def get_items():
 			try:
 				val = int(item)
 			except:
-				print("You need to enter a valid number.")
+				print("You need to enter a valid amount.\n")
 				continue
 			if (val):
 				print(val)
-			
+
 def percentage(part, whole):
 	""" percentage: turn a regular number into a percentage """
 
