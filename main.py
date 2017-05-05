@@ -86,17 +86,6 @@ def get_items():
 	objects = ["spare parts", "medical products", "food"]
 	current = 0
 
-	print("The supplies you may bring are food, medical products, and spare parts.")
-	msvcrt.getch()
-	print("Your spaceship has a maximum cargo of 5000 pounds. If you exceed the limit, the rocket will not launch due to safety precuations.")
-	msvcrt.getch()
-	print("Spare parts weigh 200 lb per unit. You can use these to repair the spaceship if it breaks.")
-	msvcrt.getch()
-	print("Medical products weigh 100 lb per unit. These will help you heal diseases.")
-	msvcrt.getch()
-	print("Food weighs 1.5 lb per pack. This will make sure you do not starve on the journey.")
-	msvcrt.getch()
-
 	while (current < 3):
 		if (amount <= 5000):
 			print("Please enter the number of {} that you would like to bring.".format(objects[current]))
@@ -145,6 +134,16 @@ msvcrt.getch()
 print("Give me the names of you and the other two members of your crew:")
 names = get_names()
 print("For the preparation of this journey, you must gather supplies.")
+msvcrt.getch()
+print("The supplies you may bring are food, medical products, and spare parts.")
+msvcrt.getch()
+print("Your spaceship has a maximum cargo of 5000 pounds. If you exceed the limit, the rocket will not launch due to safety precuations.")
+msvcrt.getch()
+print("Spare parts weigh 200 lb per unit. You can use these to repair the spaceship if it breaks.")
+msvcrt.getch()
+print("Medical products weigh 100 lb per unit. These will help you heal diseases.")
+msvcrt.getch()
+print("Food weighs 1.5 lb per pack. This will make sure you do not starve on the journey.")
 msvcrt.getch()
 # next is to figure out how to get the amount they want and store it in the inventory
 
