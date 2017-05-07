@@ -102,7 +102,7 @@ def get_items():
 				except ValueError:
 					print("You need to enter a valid amount.")
 					continue
-			if (current == 0 and ((val * 200) <= pmax)):				# spare parts
+			if (current == 0 and ((val * 200) <= pmax)):			# spare parts
 				new_amount = val * 200
 				listamount[0] += val
 			elif (current == 1 and ((val * 100) <= pmax)):			# medical products
@@ -129,7 +129,9 @@ def get_items():
 			amount += new_amount
 			current += 1
 
-	print("You have decided to bring {} spare parts, {} medical products, and {} packs of food. This adds up to {}/5000 pounds. Is this correct? [Y/N]".format(listamount[0], listamount[1], listamount[2], amount))
+	print("You have decided to bring {} spare parts, {} medical products, and {} packs of food. This adds up to {}/5000 pounds. Is this correct? [Y/N]"
+		  .format(listamount[0], listamount[1], listamount[2], amount))
+
 	while True:
 		confirm = input()
 		if (confirm.lower() == "y" or confirm.lower() == "n"):
