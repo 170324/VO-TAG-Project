@@ -43,6 +43,7 @@ class Inventory:
 		for item in self.items.values():
 			message += "\n" + "\t".join([str(x) for x in [item.name, item.pounds, self.counter[item.name]]])
 		return message		# need to fix the alignment of output
+							# also need to add a "total" counter showing if they are over 5000 or not
 
 	def add_item(self, item):
 		""" add_item: adds an item class member to inventory's dictionary """
@@ -81,36 +82,78 @@ def get_names():
 def get_items():
 	""" get_items: gets the initial items the player wants and stores them in inventory """
 
-	max = 5000
-	amount = 0
+	pmax = 5000		# max pounds they can carry
+	amount = 0		# current amount of pounds
+	current = 0		# 0 for spare, 1 for meds, 2 for food
 	objects = ["spare parts", "medical products", "food"]
-	current = 0
+	listamount = [0, 0, 0] # first item is spare, 2nd is meds, 3rd is food
 
 	while (current < 3):
 		if (amount <= 5000):
 			print("Please enter the number of {} that you would like to bring.".format(objects[current]))
-			item = input()
-			try:
-				val = int(item)
-			except:
-				print("You need to enter a valid amount.\n")
-				continue
-			if (current == 0 and ((val * 200) <= max)):				# spare parts
+			while True:
+				item = input()
+				try:
+					val = int(item)
+					if val < 0:
+						print("You need to insert a positive integer.")
+						continue
+					break
+				except ValueError:
+					print("You need to enter a valid amount.")
+					continue
+			if (current == 0 and ((val * 200) <= pmax)):				# spare parts
 				new_amount = val * 200
-				Inventory.add_item(S_parts)
-				Inventory.counter["Spare Parts"] += (val - 1)
-			elif (current == 1 and ((val * 100) <= max)):			# medical products
+				listamount[0] += val
+			elif (current == 1 and ((val * 100) <= pmax)):			# medical products
 				new_amount = val * 100
-				Inventory.add_item(Meds)
-				Inventory.counter["Medical Products"] += (val - 1)
-			elif (current == 2 and ((val * 1.5) <= max)):			# food
+				listamount[1] += val
+			elif (current == 2 and ((val * 1.5) <= pmax)):			# food
 				new_amount = val * 1.5
-				Inventory.add_item(Food)
-				Inventory.counter["Food"] += (val - 1)
-			else:
-				pass
+				listamount[2] += val
+			elif (current == 0):
+				new_amount = pmax - amount
+				listamount[0] += math.floor(new_amount / 200)
+				amount += new_amount
+				break
+			elif (current == 1):
+				new_amount = pmax - amount
+				listamount[1] += math.floor(new_amount / 100)
+				amount += new_amount
+				break
+			elif (current == 2):
+				new_amount = pmax - amount
+				listamount[2] += math.floor(new_amount / 1.5)
+				amount += new_amount
+				break
 			amount += new_amount
 			current += 1
+
+	print("You have decided to bring {} spare parts, {} medical products, and {} packs of food. This adds up to {}/5000 pounds. Is this correct? [Y/N]".format(listamount[0], listamount[1], listamount[2], amount))
+	while True:
+		confirm = input()
+		if (confirm.lower() == "y" or confirm.lower() == "n"):
+			break
+		else:
+			print("Please enter a valid answer [Y/N]")
+			continue
+
+	if (confirm.lower() == "y"):
+		if (listamount[0] != 0):		# check if any spare parts need to be added
+			Inventory.add_item(S_parts)
+			Inventory.counter["Spare Parts"] += (listamount[0] - 1)
+
+		if (listamount[1] != 0):		# check if any medical parts need to be added
+			Inventory.add_item(Meds)
+			Inventory.counter["Medical Products"] += (listamount[1] - 1)
+
+		if (listamount[2] != 0):		# check if any food needs to be added
+			Inventory.add_item(Food)
+			Inventory.counter["Food"] += (listamount[2] - 1)
+	elif (confirm.lower() == "n"):
+		print("Please enter the amount of the items you want again.")
+		msvcrt.getch()
+		get_items()
 
 def percentage(part, whole):
 	""" percentage: turn a regular number into a percentage """
@@ -145,7 +188,7 @@ print("Medical products weigh 100 lb per unit. These will help you heal diseases
 msvcrt.getch()
 print("Food weighs 1.5 lb per pack. This will make sure you do not starve on the journey.")
 msvcrt.getch()
-# next is to figure out how to get the amount they want and store it in the inventory
+get_items()
 
 Player1 = Player(names[0])
 Player2 = Player(names[1])
