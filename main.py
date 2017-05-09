@@ -1,5 +1,6 @@
 import msvcrt
 import math
+import random
 
 class Player:
 	""" Player: defines the base stats of the player """
@@ -161,6 +162,13 @@ def percentage(part, whole):
 	""" percentage: turn a regular number into a percentage """
 
 	return 100 * float(part)/float(whole)
+	
+def daily():
+	""" daily: generates what happens during the day """
+	global day
+	days_since_problem = 0
+	
+	
 
 # global and class definitions
 day = 0			# number day it is, 26 turns in total
@@ -172,6 +180,7 @@ B_arm = Problem("Broken Arm", "a broken arm", 7, 50)
 Food = Item("Food", 1.5)
 Meds = Item("Medical Products", 100, True)
 S_parts = Item("Spare Parts", 200)
+diseases = [Flu, S_virus, Smallpox, Sprain, B_arm]
 Inventory = Inventory()
 
 print("Hello, welcome to A Journey To Mars. [Press any key to continue]")
