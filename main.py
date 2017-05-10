@@ -163,22 +163,35 @@ def percentage(part, whole):
 
 	return 100 * float(part)/float(whole)
 
+def sick_damage():
+	""" sick_damage: deal damage to whoever is sick at the moment """
+	
+	global sicklist
+	for key in sicklist:
+#		key.health -= val.dpt
+		print(key.name)
+		print(key.health)
+	
 def daily():
 	""" daily: generates what happens during the day """
 
 	day = 0						# number day it is, 26 turns in total
 	days_since_problem = 0				# there will be a minimum of 3 - 5 days before something can happen
-
+	global sicklist
+	
 	while (day <= 26):
-		# function that deals damage will be here
-		# will also check if someone died
 		if (days_since_problem == 0):
-			problem = randint(1, 5)		# 1 is sick, 2 is spaceship problems
+			problem = random.randint(1, 5)		# 1 is sick, 2 is spaceship problems
 							# 3 is meteor shower, 4-5 are nothing atm
 
 			if (problem == 1):		# get someone sick
-				victim = randint(1, 3)
-				disease = diseases[randint(1, 4)]
+				victim = players[random.randint(0, 2)]
+				disease = diseases[random.randint(0, 4)]
+				sicklist[victim] = disease
+				print(victim.name + "has got sick with " + disease.altname)
+				msvcrt.getch()
+				sick_damage()
+				
 
 
 # global and class definitions
@@ -190,7 +203,6 @@ B_arm = Problem("Broken Arm", "a broken arm", 7, 50)
 Food = Item("Food", 1.5)
 Meds = Item("Medical Products", 100, True)
 S_parts = Item("Spare Parts", 200)
-diseases = [Flu, S_virus, Smallpox, Sprain, B_arm]
 Inventory = Inventory()
 
 print("Hello, welcome to A Journey To Mars. [Press any key to continue]")
@@ -214,3 +226,6 @@ get_items()
 Player1 = Player(names[0])
 Player2 = Player(names[1])
 Player3 = Player(names[2])
+players = [Player1, Player2, Player3]
+diseases = [Flu, S_virus, Smallpox, Sprain, B_arm]
+sicklist = {}
