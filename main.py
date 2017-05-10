@@ -162,16 +162,26 @@ def percentage(part, whole):
 	""" percentage: turn a regular number into a percentage """
 
 	return 100 * float(part)/float(whole)
-	
+
 def daily():
 	""" daily: generates what happens during the day """
-	global day
-	days_since_problem = 0
-	
-	
+
+	day = 0						# number day it is, 26 turns in total
+	days_since_problem = 0				# there will be a minimum of 3 - 5 days before something can happen
+
+	while (day <= 26):
+		# function that deals damage will be here
+		# will also check if someone died
+		if (days_since_problem == 0):
+			problem = randint(1, 5)		# 1 is sick, 2 is spaceship problems
+							# 3 is meteor shower, 4-5 are nothing atm
+
+			if (problem == 1):		# get someone sick
+				victim = randint(1, 3)
+				disease = diseases[randint(1, 4)]
+
 
 # global and class definitions
-day = 0			# number day it is, 26 turns in total
 Flu = Problem("Flu", "the flu", 20, 40)
 S_virus = Problem("Stomach Virus", "a stomach virus", 45, 80)
 Smallpox = Problem("Smallpox", "smallpox", 15, 20)
