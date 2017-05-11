@@ -172,7 +172,7 @@ def sick_damage():
 	for key in list(sicklist):
 		key.health -= sicklist[key].dpt
 		if (key.health <= 0):
-			print(key.name + " has died.")
+			print("Your crew member " + key.name + " has died.")
 			msvcrt.getch()
 			del sicklist[key]
 			players.remove(key)		# will be confusing if player makes more than 1 player with the same name
@@ -190,15 +190,22 @@ def daily():
 	while (day <= 26 or (players != [])):		# while it isn't the last day or everyone is still living
 			sick_damage()
 			if (days_since_problem == 0):
-				problem = random.randint(1, 5)		# 1 is sick, 2 is spaceship problems
+				problem = 2
+				#problem = random.randint(1, 5)		# 1 is sick, 2 is spaceship problems
 									# 3 is meteor shower, 4-5 means there won't be a problem
 
 				if (problem == 1):			# get someone sick
 					victim = players[random.randint(0, (len(players)-1))]
 					disease = diseases[random.randint(0, 4)]
-					sicklist[victim] = disease
+					sicklist[victim] = disease		# have to do something about getting two of the same disease
 					print(victim.name + " has got sick with " + disease.altname)
 					msvcrt.getch()
+				if (problem == 2):			# broken spaceship
+					print("Your spaceship is broken.")
+					#msvcrt.getch()
+					for key in Inventory.items:
+						if (key == "Spare Parts"):
+							print("You have {} spare parts in your inventory. Would you like to use one to repair the ship?".format(Inventory.counter["Spare Parts"]))
 
 
 # global and class definitions
@@ -236,6 +243,6 @@ Player3 = Player(names[2])
 players = [Player1, Player2, Player3]
 diseases = [Flu, S_virus, Smallpox, Sprain, B_arm]
 sicklist = {}		# Player: Sickness, both classes
-
+	
 #daily()
 #after daily exits, it will check if they made it to 26 days or if they died
