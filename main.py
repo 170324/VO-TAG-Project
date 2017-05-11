@@ -97,7 +97,7 @@ def get_items():
 				try:
 					val = int(item)
 					if val < 0:
-						print("You need to insert a positive integer.")
+						print("You need to enter a positive amount.")
 						continue
 					break
 				except ValueError:
@@ -164,34 +164,41 @@ def percentage(part, whole):
 	return 100 * float(part)/float(whole)
 
 def sick_damage():
-	""" sick_damage: deal damage to whoever is sick at the moment """
-	
+	""" sick_damage: deal damage or kill whoever is sick at the moment """
+
 	global sicklist
-	for key in sicklist:
-#		key.health -= val.dpt
-		print(key.name)
-		print(key.health)
-	
+	global players
+
+	for key in list(sicklist):
+		key.health -= sicklist[key].dpt
+		if (key.health <= 0):
+			print(key.name + " has died.")
+			msvcrt.getch()
+			del sicklist[key]
+			players.remove(key)		# will be confusing if player makes more than 1 player with the same name
+		else:
+			print(key.name + " has worsened from " + sicklist[key].altname)
+			msvcrt.getch()
+
 def daily():
 	""" daily: generates what happens during the day """
 
 	day = 0						# number day it is, 26 turns in total
 	days_since_problem = 0				# there will be a minimum of 3 - 5 days before something can happen
 	global sicklist
-	
-	while (day <= 26):
-		if (days_since_problem == 0):
-			problem = random.randint(1, 5)		# 1 is sick, 2 is spaceship problems
-							# 3 is meteor shower, 4-5 are nothing atm
 
-			if (problem == 1):		# get someone sick
-				victim = players[random.randint(0, 2)]
-				disease = diseases[random.randint(0, 4)]
-				sicklist[victim] = disease
-				print(victim.name + "has got sick with " + disease.altname)
-				msvcrt.getch()
-				sick_damage()
-				
+	while (day <= 26 or (players != [])):		# while it isn't the last day or everyone is still living
+			sick_damage()
+			if (days_since_problem == 0):
+				problem = random.randint(1, 5)		# 1 is sick, 2 is spaceship problems
+									# 3 is meteor shower, 4-5 means there won't be a problem
+
+				if (problem == 1):			# get someone sick
+					victim = players[random.randint(0, (len(players)-1))]
+					disease = diseases[random.randint(0, 4)]
+					sicklist[victim] = disease
+					print(victim.name + " has got sick with " + disease.altname)
+					msvcrt.getch()
 
 
 # global and class definitions
@@ -228,4 +235,7 @@ Player2 = Player(names[1])
 Player3 = Player(names[2])
 players = [Player1, Player2, Player3]
 diseases = [Flu, S_virus, Smallpox, Sprain, B_arm]
-sicklist = {}
+sicklist = {}		# Player: Sickness, both classes
+
+#daily()
+#after daily exits, it will check if they made it to 26 days or if they died
