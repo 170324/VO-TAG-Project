@@ -1,12 +1,12 @@
 import msvcrt
 import math
 import random
+import sys
 
 class Player:
 	""" Player: defines the base stats of the player """
 
 	health = 100
-	sick = False
 	morale = "standard"				# three types of morale, [low, standard, and high]
 							# it matters when a problem occurs, if a player has
 							# low morale than it is harder to fix something,
@@ -133,13 +133,7 @@ def get_items():
 	print("You have decided to bring {} spare parts, {} medical products, and {} packs of food. This adds up to {}/5000 pounds. Is this correct? [Y/N]"
 		  .format(listamount[0], listamount[1], listamount[2], amount))
 
-	while True:
-		confirm = input()
-		if (confirm.lower() == "y" or confirm.lower() == "n"):
-			break
-		else:
-			print("Please enter a valid answer [Y/N]")
-			continue
+	confirm = get_answer()
 
 	if (confirm.lower() == "y"):
 		if (listamount[0] != 0):		# check if any spare parts need to be added
@@ -162,6 +156,17 @@ def percentage(part, whole):
 	""" percentage: turn a regular number into a percentage """
 
 	return 100 * float(part)/float(whole)
+
+def get_answer():
+	""" get_answer: to make sure a player enters yes or no """
+
+	while True:
+		confirm = input()
+		if (confirm.lower() == "y" or confirm.lower() == "n"):
+			return confirm
+		else:
+			print("Please enter a valid answer [Y/N]")
+			continue
 
 def sick_damage():
 	""" sick_damage: deal damage or kill whoever is sick at the moment """
@@ -190,8 +195,7 @@ def daily():
 	while (day <= 26 or (players != [])):		# while it isn't the last day or everyone is still living
 			sick_damage()
 			if (days_since_problem == 0):
-				problem = 2
-				#problem = random.randint(1, 5)		# 1 is sick, 2 is spaceship problems
+				problem = random.randint(1, 5)		# 1 is sick, 2 is spaceship problems
 									# 3 is meteor shower, 4-5 means there won't be a problem
 
 				if (problem == 1):			# get someone sick
@@ -200,12 +204,57 @@ def daily():
 					sicklist[victim] = disease		# have to do something about getting two of the same disease
 					print(victim.name + " has got sick with " + disease.altname)
 					msvcrt.getch()
+
 				if (problem == 2):			# broken spaceship
-					print("Your spaceship is broken.")
-					#msvcrt.getch()
-					for key in Inventory.items:
-						if (key == "Spare Parts"):
-							print("You have {} spare parts in your inventory. Would you like to use one to repair the ship?".format(Inventory.counter["Spare Parts"]))
+					print("Your spaceship has received damage!")
+					msvcrt.getch()
+					if "Spare Parts" in Inventory.items:
+						print("You have {} spare parts in your inventory. Would you like to use one to repair the ship? [Y/N]".format(Inventory.counter["Spare Parts"]))
+						confirm = get_answer()
+
+						if (confirm.lower() == "y"):
+							print("Your spaceship has been repaired.")
+							Inventory.remove_item(S_parts)
+							msvcrt.getch()
+						elif (confirm.lower() == "n"):
+							print("There is a chance you can repair the ship without the spare parts. Will you take the risk and hope for the best? [Y/N]")
+							confirm = get_answer()
+
+							if (confirm.lower() == "y"):
+								success = random.randint(1, 3)
+
+								if (success == 2):
+									print("You have managed to pull through and fix the ship!")
+									msvcrt.getch()
+								else:
+									print("You were unable to fix the ship. Because of this, you spiraled out of control and crashed into the sun. RIP")
+									msvcrt.getch()
+									sys.exit()
+							elif (confirm.lower() == "n"):		# she said, "baby i am not afraid to die"
+								print("Your crew berates you for lying to them about fixing the ship, nevertheless you all died. RIP")
+								msvcrt.getch()					# push me to the edge
+								sys.exit()						# all my friends are dead
+					else:
+						print("You are not carrying any spare parts.")
+						msvcrt.getch()
+						print("There is a chance you can repair the ship without the spare parts. Will you take the risk and hope for the best? [Y/N]")
+						confirm = get_answer()
+
+						if (confirm.lower() == "y"):
+							success = random.randint(1, 3)
+
+							if (success == 2):
+								print("You have managed to pull through and fix the ship!")
+								msvcrt.getch()
+							else:
+								print("You were unable to fix the ship. RIP")
+								msvcrt.getch()
+								sys.exit()
+						elif (confirm.lower() == "n"):
+							print("Your horrible decision making has gotten you and your entire crew killed. RIP")
+							msvcrt.getch()
+							sys.exit()
+
 
 
 # global and class definitions
@@ -243,6 +292,6 @@ Player3 = Player(names[2])
 players = [Player1, Player2, Player3]
 diseases = [Flu, S_virus, Smallpox, Sprain, B_arm]
 sicklist = {}		# Player: Sickness, both classes
-	
+
 #daily()
 #after daily exits, it will check if they made it to 26 days or if they died
