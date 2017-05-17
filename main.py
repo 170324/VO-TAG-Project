@@ -185,6 +185,19 @@ def sick_damage():
 			print(key.name + " has worsened from " + sicklist[key].altname)
 			msvcrt.getch()
 
+def eating():
+	""" eating: consumes food at start of day and deals damage if they have none """
+	
+	global ration
+	
+	if "Food" in Inventory.items:
+		for i in players:
+			i.health += ration*4
+			if i.health > 100:
+				i.health = 100
+	
+		
+	
 def daily():
 	""" daily: generates what happens during the day """
 
@@ -254,6 +267,10 @@ def daily():
 							print("Your horrible decision making has gotten you and your entire crew killed. RIP")
 							msvcrt.getch()
 							sys.exit()
+				
+				if (problem == 3):			# meteor shower
+					pass
+					
 
 
 
@@ -266,6 +283,7 @@ B_arm = Problem("Broken Arm", "a broken arm", 7, 50)
 Food = Item("Food", 1.5)
 Meds = Item("Medical Products", 100, True)
 S_parts = Item("Spare Parts", 200)
+ration = 2
 Inventory = Inventory()
 
 print("Hello, welcome to A Journey To Mars. [Press any key to continue]")
