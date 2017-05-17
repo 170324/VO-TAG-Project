@@ -190,12 +190,13 @@ def eating():
 	
 	global ration
 	
+	amount = (len(players) * ration * 14)
 	if "Food" in Inventory.items:
-		for i in players:
-			i.health += ration*4
-			if i.health > 100:
-				i.health = 100
-	
+		if (Inventory.counter["Food"] >= amount): #check
+			for i in players:
+				i.health += ration*4
+				if i.health > 100:
+					i.health = 100
 		
 	
 def daily():
@@ -207,6 +208,7 @@ def daily():
 
 	while (day <= 26 or (players != [])):		# while it isn't the last day or everyone is still living
 			sick_damage()
+			eating()
 			if (days_since_problem == 0):
 				problem = random.randint(1, 5)		# 1 is sick, 2 is spaceship problems
 									# 3 is meteor shower, 4-5 means there won't be a problem
@@ -284,6 +286,7 @@ Food = Item("Food", 1.5)
 Meds = Item("Medical Products", 100, True)
 S_parts = Item("Spare Parts", 200)
 ration = 2
+days_since_no_food = 0
 Inventory = Inventory()
 
 print("Hello, welcome to A Journey To Mars. [Press any key to continue]")
