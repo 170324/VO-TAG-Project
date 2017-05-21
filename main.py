@@ -192,19 +192,26 @@ def eating():
 	global starve_damage
 
 	amount = (len(players) * ration * 14)
-	if "Food" in Inventory.items:
-		if (Inventory.counter["Food"] >= amount): #check
-			for i in players:
-				i.health += ration*4
-				if i.health > 100:
-					i.health = 100
+	if (("Food" in Inventory.items) and (Inventory.counter["Food"] >= (amount / 1.5))):
+		for i in players:
+			i.health += ration*4
+			if i.health > 100:
+				i.health = 100
+		x = amount / 1.5
+		while (x > 0):
+			Inventory.remove_item(Food)
+			x -= 1
 	else:
+		if "Food" in Inventory.items:
+			del Inventory.items["Food"]
+			del Inventory.counter["Food"]
 		print("Your crew is currently starving!")
 		starve_damage += 3.5
 		for i in players:
 			i.health -= starve_damage
 			if (i.health <= 0):
 				print(i.name + " has died from starvation!")
+				msvcrt.getch()
 				players.remove(i)
 				if i in sicklist:
 					del sicklist[i]
@@ -212,8 +219,10 @@ def eating():
 def turn_choice():
 	""" turn_choice: lets player choose what they want to do for the day """
 
+	global ration
+
 	while True:
-		print("What would you like to do?\n1. Continue\n2. View Inventory\n3. Check status\n4. Change rations")
+		print("\nWhat would you like to do?\n1. Continue\n2. View Inventory\n3. Check status\n4. Change rations\n5. Heal")
 		choice = input()
 		if ((choice.isdigit() == False) or (int(choice) <= 0) or (int(choice) > 4)):
 			print("You need to enter the number that corresponds with your choice")
@@ -229,99 +238,219 @@ def turn_choice():
 
 		if (int(choice) == 3):			# print living player stats
 			for i in players:
-				print(i.name + "\n--------------------\n")
-				print()
+				print("\n" + i.name + "\n--------------------\n")
+				if i in sicklist:
+					print(i.name + " is sick with " + sicklist[i].altname)
+				else:
+					print(i.name + " is healthy")
+				if "Food" in Inventory.items:
+					print(i.name + " is eating well")
+				else:
+					print(i.name + " is starving")
+
+		if (int(choice) == 4):			# change rations
+			if (ration == 1):
+				print("Your crew is currently eating just enough food to survive. Would you like to change that?")
+				print("1: No, keep it the same!\n2: Yes, let them eat a standard amount\n3: Yes, let them feast!")
+
+				while True:
+					choice2 = input()
+					if ((choice2.isdigit() == False) or (int(choice2) <= 0) or (int(choice2) > 3)):
+						print("You need to enter the number that corresponds with your choice")
+						continue
+
+					if (int(choice2) == 1):
+						print("Your rations stayed the same")
+						msvcrt.getch()
+						break
+
+					if (int(choice2) == 2):
+						ration = 2
+						print("Your crew now eats a standard amount of food per day")
+						msvcrt.getch()
+						break
+
+					if (int(choice2) == 3):
+						ration = 3
+						print("Your crew now eats a huge amount of food per day")
+						msvcrt.getch()
+						break
+
+			elif (ration == 2):
+				print("Your crew is currently eating a standard amount of food each day. Would you like to change that?")
+				print("1: No, keep it the same!\n2: Yes, make them eat just enough to live\n3: Yes, let them feast!")
+
+				while True:
+					choice2 = input()
+					if ((choice2.isdigit() == False) or (int(choice2) <= 0) or (int(choice2) > 3)):
+						print("You need to enter the number that corresponds with your choice")
+						continue
+
+					if (int(choice2) == 1):
+						print("Your rations stayed the same")
+						msvcrt.getch()
+						break
+
+					if (int(choice2) == 2):
+						ration = 1
+						print("Your crew now eats a small amount of food per day")
+						msvcrt.getch()
+						break
+
+					if (int(choice2) == 3):
+						ration = 3
+						print("Your crew now eats a huge amount of food per day")
+						msvcrt.getch()
+						break
+
+			elif (ration == 3):
+				print("Your crew is currently overeating each day. Would you like to change that?")
+				print("1: No, keep it the same!\n2: Yes, make them eat just enough to live\n3: Yes, let them eat a standard amount")
+
+				while True:
+					choice2 = input()
+					if ((choice2.isdigit() == False) or (int(choice2) <= 0) or (int(choice2) > 3)):
+						print("You need to enter the number that corresponds with your choice")
+						continue
+
+					if (int(choice2) == 1):
+						print("Your rations stayed the same")
+						msvcrt.getch()
+						break
+
+					if (int(choice2) == 2):
+						ration = 1
+						print("Your crew now eats a small amount of food per day")
+						msvcrt.getch()
+						break
+
+					if (int(choice2) == 3):
+						ration = 2
+						print("Your crew now eats a standard amount of food per day")
+						msvcrt.getch()
+						break
+
+		if (int(choice) == 5):			# heal some player
+			if (sicklist == {}):
+				print("Everyone on your team is already healthy")
+			else:
+				pass
+
 
 def daily():
 	""" daily: generates what happens during the day """
 
 	day = 1						# number day it is, 26 turns in total
-	days_since_problem = 0				# there will be a minimum of 3 - 5 days before something can happen
+	days_since_problem = 0				# there will be a minimum of 2 - 4 days before something can happen
 	global sicklist
 
-	while (day < 26 or (len(players) != 0)):		# while it isn't the last day or everyone is still living
-		if (days_since_problem == 0 or days_since_problem < 0):
-			problem = random.randint(1, 5)		# 1 is sick, 2 is spaceship problems
-								# 3 is meteor shower, 4-5 means there won't be a problem
+	while True:		# while it isn't the last day or everyone is still living
+		if (day < 26):
+			if (len(players) != 0):
+				if (days_since_problem == 0 or days_since_problem < 0):
+					problem = random.randint(1, 5)		# 1 is sick, 2 is spaceship problems
+									# 3 is meteor shower, 4-5 means there won't be a problem
 
-			if (problem == 1):			# get someone sick
-				days_since_problem = random.randint(2, 4)
-				victim = players[random.randint(0, (len(players)-1))]
-				disease = diseases[random.randint(0, 4)]
-				sicklist[victim] = disease		# have to do something about getting two of the same disease
-				print(victim.name + " has got sick with " + disease.altname)
-				msvcrt.getch()
-
-			if (problem == 2):			# broken spaceship
-				days_since_problem = random.randint(2, 4)
-				print("Your spaceship has received damage!")
-				msvcrt.getch()
-				if "Spare Parts" in Inventory.items:
-					print("You have {} spare parts in your inventory. Would you like to use one to repair the ship? [Y/N]".format(Inventory.counter["Spare Parts"]))
-					confirm = get_answer()
-
-					if (confirm.lower() == "y"):
-						print("Your spaceship has been repaired.")
-						Inventory.remove_item(S_parts)
+					if (problem == 1):			# get someone sick
+						days_since_problem = random.randint(2, 4)
+						victim = players[random.randint(0, (len(players)-1))]
+						disease = diseases[random.randint(0, 4)]
+						sicklist[victim] = disease		# have to do something about getting two of the same disease
+						print(victim.name + " has got sick with " + disease.altname)
 						msvcrt.getch()
-					elif (confirm.lower() == "n"):
-						print("There is a chance you can repair the ship without the spare parts. Will you take the risk and hope for the best? [Y/N]")
-						confirm = get_answer()
 
-						if (confirm.lower() == "y"):
-							success = random.randint(1, 3)
+					if (problem == 2):			# broken spaceship
+						days_since_problem = random.randint(2, 4)
+						print("Your spaceship has received damage!")
+						msvcrt.getch()
+						if "Spare Parts" in Inventory.items:
+							print("You have {} spare parts in your inventory. Would you like to use one to repair the ship? [Y/N]".format(Inventory.counter["Spare Parts"]))
+							confirm = get_answer()
 
-							if (success == 2):
-								print("You have managed to pull through and fix the ship!")
+							if (confirm.lower() == "y"):
+								print("Your spaceship has been repaired.")
+								Inventory.remove_item(S_parts)
 								msvcrt.getch()
-							else:
-								print("You were unable to fix the ship. Because of this, you spiraled out of control and crashed into the sun. RIP")
+							elif (confirm.lower() == "n"):
+								print("There is a chance you can repair the ship without the spare parts. Will you take the risk and hope for the best? [Y/N]")
+								confirm = get_answer()
+
+								if (confirm.lower() == "y"):
+									success = random.randint(1, 3)
+
+									if (success == 2):
+										print("You have managed to pull through and fix the ship!")
+										msvcrt.getch()
+									else:
+										print("You were unable to fix the ship. Because of this, you spiraled out of control and crashed into the sun. RIP")
+										msvcrt.getch()
+										sys.exit()
+								elif (confirm.lower() == "n"):		# she said, "baby i am not afraid to die"
+									print("Your crew berates you for lying to them about fixing the ship, nevertheless you all died. RIP")
+									msvcrt.getch()					# push me to the edge
+									sys.exit()						# all my friends are dead
+						else:
+							print("You are not carrying any spare parts.")
+							msvcrt.getch()
+							print("There is a chance you can repair the ship without the spare parts. Will you take the risk and hope for the best? [Y/N]")
+							confirm = get_answer()
+
+							if (confirm.lower() == "y"):
+								success = random.randint(1, 3)
+
+								if (success == 2):
+									print("You have managed to pull through and fix the ship!")
+									msvcrt.getch()
+								else:
+									print("You were unable to fix the ship. RIP")
+									msvcrt.getch()
+									sys.exit()
+							elif (confirm.lower() == "n"):
+								print("Your horrible decision making has gotten you and your entire crew killed. RIP")
 								msvcrt.getch()
 								sys.exit()
-						elif (confirm.lower() == "n"):		# she said, "baby i am not afraid to die"
-							print("Your crew berates you for lying to them about fixing the ship, nevertheless you all died. RIP")
-							msvcrt.getch()					# push me to the edge
-							sys.exit()						# all my friends are dead
-				else:
-					print("You are not carrying any spare parts.")
-					msvcrt.getch()
-					print("There is a chance you can repair the ship without the spare parts. Will you take the risk and hope for the best? [Y/N]")
-					confirm = get_answer()
 
-					if (confirm.lower() == "y"):
-						success = random.randint(1, 3)
+					if (problem == 3):			# meteor shower
+						lost_pounds = ration*7*len(players)*random.randint(1, 3)
+						print("You flew into a meteor shower.", end="")
 
-						if (success == 2):
-							print("You have managed to pull through and fix the ship!")
-							msvcrt.getch()
+						if "Food" in Inventory.items:
+							print(" Because of this you had to stay put and you lost {} pounds of food".format(lost_pounds))
+							x = lost_pounds / 1.5
+
+							if (x > Inventory.counter["Food"]):
+								del Inventory.items["Food"]
+								del Inventory.counter["Food"]
+							else:
+								while (x > 0):
+									Inventory.remove_item(Food)
+									x -= 1
+
 						else:
-							print("You were unable to fix the ship. RIP")
+							print(" Since you did not have any food on you stuck in the meteor shower, your crew all starved to death. RIP")
 							msvcrt.getch()
 							sys.exit()
-					elif (confirm.lower() == "n"):
-						print("Your horrible decision making has gotten you and your entire crew killed. RIP")
-						msvcrt.getch()
-						sys.exit()
+						days_since_problem = random.randint(2, 4)
 
-			if (problem == 3):			# meteor shower
-				days_since_problem = random.randint(2, 4)
+					if (problem == 4):
+						pass
 
-			if (problem == 4):
-				pass
+					if (problem == 5):
+						pass
 
-			if (problem == 5):
-				pass
+				turn_choice()
+				sick_damage()
+				eating()
+				day += 1
+				days_since_problem -= 1
 
-		turn_choice()
-		sick_damage()
-		eating()
-		for i in players:
-			print(i.health)
-		print(day)
-		print(players)
-		day += 1
-		days_since_problem -= 1
+		if (day >= 26):
+			print("You and your crew have survived the mission to mars!")
+			sys.exit()
 
+		if (len(players) == 0):
+			print("You and your crew failed to get to mars.")
+			sys.exit()
 
 # global and class definitions
 Flu = Problem("Flu", "the flu", 20, 40)
@@ -362,5 +491,4 @@ players = [Player1, Player2, Player3]
 diseases = [Flu, S_virus, Smallpox, Sprain, B_arm]
 sicklist = {}		# Player: Sickness, both classes
 
-#daily()
-#after daily exits, it will check if they made it to 26 days or if they died
+daily()
